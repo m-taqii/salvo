@@ -2,6 +2,7 @@ import mongoose, { Document } from "mongoose";
 
 interface IEmail extends Document {
     to: string;
+    from: string;
     subject: string;
     content: string;
     status: "sent" | "failed" | "pending";
@@ -9,6 +10,10 @@ interface IEmail extends Document {
 
 const emailSchema = new mongoose.Schema<IEmail>({
     to: {
+        type: String,
+        required: true,
+    },
+    from: {
         type: String,
         required: true,
     },
@@ -29,5 +34,5 @@ const emailSchema = new mongoose.Schema<IEmail>({
     timestamps: true
 });
 
-export const Email = mongoose.models.Email || mongoose.model<IEmail>("Email", emailSchema);
+export const Email = (mongoose.models.Email as mongoose.Model<IEmail>) || mongoose.model<IEmail>("Email", emailSchema);
 export default Email;
