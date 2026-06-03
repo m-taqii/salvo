@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
-interface IEmail {
+interface IEmail extends Document {
     to: string;
     subject: string;
     content: string;
