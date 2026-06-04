@@ -34,6 +34,6 @@ export async function manualSendEmailController(req: Request, res: Response) {
         res.status(200).json({ status: "success", response: "Email sent successfully" });
     } catch (error) {
         console.error("Error in manualSendEmailController:", error);
-        res.status(500).json({ status: "error", response: { error } });
+        res.status(500).json({ status: "error", response: { error: error instanceof Error ? error.message : "Unknown error" } });
     }
 }

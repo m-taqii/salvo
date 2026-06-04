@@ -16,6 +16,6 @@ export const getLeadsController = async (req: Request, res: Response) => {
         res.status(200).json({ status: "success", response: leads });
     } catch (error) {
         console.error("Error in getLeadsController:", error);
-        res.status(500).json({ status: "error", response: { error } });
+        res.status(500).json({ status: "error", response: { error: error instanceof Error ? error.message : "Unknown error" } });
     }
 };

@@ -98,6 +98,6 @@ Return only the JSON object.`.replace(/\n{3,}/g, '\n\n'); // Clean up any empty 
     res.status(200).json({ status: "success", response: `Email sent successfully to ${successCount} out of ${leads.length} leads` });
   } catch (error) {
     console.error("Error in sendEmailController:", error);
-    res.status(500).json({ status: "error", response: { error } });
+    res.status(500).json({ status: "error", response: { error: error instanceof Error ? error.message : "Unknown error" } });
   }
 };
