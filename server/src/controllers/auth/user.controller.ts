@@ -2,10 +2,9 @@ import User from "../../models/user.model";
 import type { Response, Request } from "express";
 import JWT from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "secret";
-
 export async function registerUser(req: Request, res: Response) {
     try {
+        const JWT_SECRET = process.env.JWT_SECRET || "secret";
         const { name, email, password, description, website } = req.body;
         if (!name || !email || !password) {
             throw new Error("Invalid user data");
@@ -26,6 +25,7 @@ export async function registerUser(req: Request, res: Response) {
 
 export async function loginUser(req: Request, res: Response) {
     try {
+        const JWT_SECRET = process.env.JWT_SECRET || "secret";
         const { email, password } = req.body;
         if (!email || !password) {
             throw new Error("Invalid user data");
@@ -63,6 +63,7 @@ export async function logoutUser(req: Request, res: Response) {
 
 export async function getLoggedInUser(req: Request, res: Response) {
     try {
+        const JWT_SECRET = process.env.JWT_SECRET || "secret";
         const token = req.cookies.token;
         if (!token) {
             throw new Error("No token found");

@@ -1,8 +1,6 @@
 import { generate } from "../services/llm.service";
-import { sendEmail } from "../utils/sendEmail";
 import type { EmailSchema } from "../schemas/email.schema";
 import emailSchema from "../schemas/email.schema";
-import Email from "../models/email.model";
 
 export async function emailAgent(to: string, from: string, userPrompt: string, customSystemPrompt?: string) {
     try {
@@ -62,32 +60,9 @@ Return ONLY a valid JSON object. No markdown. No backticks. No explanation. Noth
         if (!validatedEmail) {
             throw new Error("Invalid email content");
         }
-
-        try {
-            // Send the email
-            await sendEmail(to, from, validatedEmail.subject, validatedEmail.content);
-
-            // Record in the DB
-            await Email.create({
-                to,
-                from,
-                subject: validatedEmail.subject,
-                content: validatedEmail.content,
-                status: "sent",
-            });
-            return true;
-        } catch (error) {
-            await Email.create({
-                to,
-                from,
-                subject: validatedEmail.subject,
-                content: validatedEmail.content,
-                status: "failed",
-            });
-            return false;
-        }
+        return { to, from, subject: validatedEmail.subject, content: validatedEmail.content };
     } catch (error: any) {
         console.error("Error in emailAgent:", error);
-        return false;
+        return { to, from, subject: "", content: "" };
     }
 }

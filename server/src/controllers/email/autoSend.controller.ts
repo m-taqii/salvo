@@ -1,6 +1,8 @@
 import type { Request, Response } from "express";
 import * as XLSX from "xlsx";
-import { emailAgent } from "../../agents/emailer";
+import { emailAgent } from "../../agents/drafting.agent";
+import { sendEmail } from "../../utils/sendEmail";
+import Email from "../../models/email.model";
 
 export const autoSendEmailController = async (req: Request, res: Response) => {
   try {
@@ -66,12 +68,32 @@ ${lead.description ? `Lead Description: ${lead.description}` : ""}
 ${lead.website ? `Lead Website: ${lead.website}` : ""}
 Return only the JSON object.`.replace(/\n{3,}/g, '\n\n'); // Clean up any empty lines
 
-      const status = await emailAgent(lead.email, from, userPrompt, systemPrompt);
-      if (!status) {
-        console.error("Failed to send email to", lead.email);
+      const draft = await emailAgent(lead.email, from, userPrompt, systemPrompt);
+      if (!draft || !draft.subject || !draft.content) {
+        console.error("Failed to draft email for", lead.email);
         continue;
       }
-      successCount++;
+
+      try {
+        await sendEmail(draft.to, draft.from, draft.subject, draft.content);
+        await Email.create({
+          to: draft.to,
+          from: draft.from,
+          subject: draft.subject,
+          content: draft.content,
+          status: "sent",
+        });
+        successCount++;
+      } catch (error) {
+        console.error("Failed to send email to", lead.email, error);
+        await Email.create({
+          to: draft.to,
+          from: draft.from,
+          subject: draft.subject,
+          content: draft.content,
+          status: "failed",
+        });
+      }
     }
     res.status(200).json({ status: "success", response: `Email sent successfully to ${successCount} out of ${leads.length} leads` });
   } catch (error) {
