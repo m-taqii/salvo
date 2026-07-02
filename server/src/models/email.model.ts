@@ -5,7 +5,7 @@ interface IEmail extends Document {
     from: string;
     subject: string;
     content: string;
-    status: "sent" | "failed" | "pending";
+    status: "sent" | "failed" | "pending" | "draft";
 }
 
 const emailSchema = new mongoose.Schema<IEmail>({
@@ -27,7 +27,7 @@ const emailSchema = new mongoose.Schema<IEmail>({
     },
     status: {
         type: String,
-        enum: ["sent", "failed", "pending"],
+        enum: ["sent", "failed", "pending", "draft"],
         default: "pending",
     }
 }, {
