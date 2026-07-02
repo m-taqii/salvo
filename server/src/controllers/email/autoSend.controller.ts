@@ -11,7 +11,8 @@ export const autoSendEmailController = async (req: Request, res: Response) => {
       throw new Error("Unauthorized");
     }
     const from = user.email;
-    const { systemPrompt, intent } = req.body;
+    const { systemPrompt, intent, autoSend } = req.body;
+    const isAutoSend = autoSend === "true" || autoSend === true;
     const workbook = XLSX.read(req.file?.buffer, { type: "buffer" })
     if (!workbook) {
       throw new Error("Contact list is required");
@@ -75,17 +76,27 @@ Return only the JSON object.`.replace(/\n{3,}/g, '\n\n'); // Clean up any empty 
       }
 
       try {
-        await sendEmail(draft.to, draft.from, draft.subject, draft.content);
-        await Email.create({
-          to: draft.to,
-          from: draft.from,
-          subject: draft.subject,
-          content: draft.content,
-          status: "sent",
-        });
+        if (isAutoSend) {
+          await sendEmail(draft.to, draft.from, draft.subject, draft.content);
+          await Email.create({
+            to: draft.to,
+            from: draft.from,
+            subject: draft.subject,
+            content: draft.content,
+            status: "sent",
+          });
+        } else {
+          await Email.create({
+            to: draft.to,
+            from: draft.from,
+            subject: draft.subject,
+            content: draft.content,
+            status: "draft",
+          });
+        }
         successCount++;
       } catch (error) {
-        console.error("Failed to send email to", lead.email, error);
+        console.error("Failed to process email for", lead.email, error);
         await Email.create({
           to: draft.to,
           from: draft.from,
@@ -95,7 +106,7 @@ Return only the JSON object.`.replace(/\n{3,}/g, '\n\n'); // Clean up any empty 
         });
       }
     }
-    res.status(200).json({ status: "success", response: `Email sent successfully to ${successCount} out of ${leads.length} leads` });
+    res.status(200).json({ status: "success", response: `Email ${isAutoSend ? 'sent' : 'drafted'} successfully for ${successCount} out of ${leads.length} leads` });
   } catch (error) {
     console.error("Error in sendEmailController:", error);
     res.status(500).json({ status: "error", response: { error: error instanceof Error ? error.message : "Unknown error" } });
