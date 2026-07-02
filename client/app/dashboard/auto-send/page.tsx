@@ -104,6 +104,26 @@ export default function AutoSendPage() {
             className="min-h-[150px]"
           />
 
+          <div className="flex items-center gap-3">
+            <div className="relative flex items-start">
+              <div className="flex h-6 items-center">
+                <input
+                  id="autoSend"
+                  name="autoSend"
+                  type="checkbox"
+                  value="true"
+                  className="h-5 w-5 rounded border-slate-700 bg-slate-800/50 text-brand-500 focus:ring-brand-500 focus:ring-offset-bg-base"
+                />
+              </div>
+              <div className="ml-3 text-sm leading-6">
+                <label htmlFor="autoSend" className="font-medium text-slate-200">
+                  Auto Send (Bypass Drafts)
+                </label>
+                <p className="text-slate-400">If unchecked, emails will be saved as drafts for manual review.</p>
+              </div>
+            </div>
+          </div>
+
           <Button type="submit" className="w-full" disabled={loading || !file}>
             {loading ? "Generating & Sending..." : "Launch Campaign"}
           </Button>

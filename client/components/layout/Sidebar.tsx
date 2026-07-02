@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Send, Mail, List, LogOut } from "lucide-react";
+import { LayoutDashboard, Send, Mail, List, LogOut, FileEdit } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { api } from "../../lib/api";
 
@@ -10,6 +10,7 @@ const navigation = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { name: "Manual Send", href: "/dashboard/manual-send", icon: Send },
   { name: "Auto Send", href: "/dashboard/auto-send", icon: Mail },
+  { name: "Drafts", href: "/dashboard/drafts", icon: FileEdit },
   { name: "Leads History", href: "/dashboard/leads", icon: List },
 ];
 
