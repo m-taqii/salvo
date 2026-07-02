@@ -17,12 +17,24 @@ Salvo is a monorepo consisting of two main pieces:
 - **Full Dashboard**: A protected Next.js dashboard to view total leads contacted, track sent/failed statuses, and manually send one-off emails.
 - **Secure Authentication**: JWT-based authentication using secure, HTTP-only cookies.
 
+## CSV Lead Format
+
+When using the Auto Send (AI) feature, your `.csv` file must include a header row with the following exact columns (case-sensitive):
+
+- `name` (required): The name of the lead.
+- `company` (required): The company the lead works at.
+- `service` (required): The service or product they offer.
+- `city` (required): The city they are located in.
+- `email` (required): The email address of the lead.
+- `description` (optional): Additional context about the lead.
+- `website` (optional): The lead's website URL.
+
 ## Tech Stack
 
 - **Frontend**: Next.js 16, React 19, TailwindCSS v4, Axios, Lucide React
 - **Backend**: Bun, Express.js (TypeScript), MongoDB (Mongoose)
 - **AI Integration**: OpenAI (or Groq/custom LLM endpoints)
-- **Email Delivery**: Resend API
+- **Email Delivery**: Nodemailer (SMTP)
 
 ## Getting Started
 
@@ -34,7 +46,11 @@ Navigate to the `server` directory and set up your environment:
 cd server
 bun install
 ```
-Ensure your `.env` file is configured (see the [Server README](./server/README.md) for details), then run:
+Copy the environment template and configure your keys (OpenAI/Groq, SMTP credentials):
+```bash
+cp .env.example .env
+```
+Once your `.env` is ready, run:
 ```bash
 bun dev
 ```
@@ -46,7 +62,11 @@ In a new terminal, navigate to the `client` directory:
 cd client
 bun install
 ```
-The client defaults to pointing at port 8000. Start the Next.js development server:
+Copy the environment template (defaults to `localhost:8000`):
+```bash
+cp .env.example .env
+```
+Start the Next.js development server:
 ```bash
 bun dev
 ```
@@ -54,3 +74,16 @@ Open `http://localhost:3000` in your browser to access the Salvo platform.
 
 ## Documentation
 - For detailed backend API documentation and LLM agent rules, see the **[Server Documentation](./server/README.md)**.
+
+## Contributing
+
+Salvo is open-source and we welcome contributions! 
+
+1. Fork the repository and clone it locally.
+2. Follow the **Getting Started** guide above to run the `client` and `server`.
+3. Create a new branch for your feature (`git checkout -b feature/amazing-feature`).
+4. Commit your changes and open a Pull Request against the `main` branch.
+
+## License
+
+This project is licensed under the [MIT License](./LICENSE).
