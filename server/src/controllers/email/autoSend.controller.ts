@@ -42,7 +42,6 @@ export const autoSendEmailController = async (req: Request, res: Response) => {
     interface Lead {
       name: string;
       company: string;
-      service: string;
       city: string;
       email: string;
       description?: string;
@@ -62,7 +61,6 @@ ${intent ? `Goal/Intent of this email: ${intent}` : ""}
 
 Name: ${lead.name}
 Company: ${lead.company}
-Service: ${lead.service}
 City: ${lead.city}
 Email: ${lead.email}
 ${lead.description ? `Lead Description: ${lead.description}` : ""}

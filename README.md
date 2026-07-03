@@ -23,10 +23,9 @@ When using the Auto Send (AI) feature, your `.csv` file must include a header ro
 
 - `name` (required): The name of the lead.
 - `company` (required): The company the lead works at.
-- `service` (required): The service or product they offer.
 - `city` (required): The city they are located in.
-- `email` (required): The email address of the lead.
-- `description` (optional): Additional context about the lead.
+- `email` (required): The email address of the lead you are sending the email to.
+- `description` (optional): Additional context about the lead or company.
 - `website` (optional): The lead's website URL.
 
 ## Tech Stack
